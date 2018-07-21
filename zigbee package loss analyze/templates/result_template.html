@@ -1,0 +1,11 @@
+<h1>{{ filename }}</h1>
+<table>
+{% for key, value in result.iteritems() %}
+   <tr>
+        <th> {{ key }} </th>
+        <td> {{ value.total_send }} </td>
+        <td> {{ value.total_ack }} </td>
+        <td> {{ value.str_rate }} </td>
+   </tr>
+{% endfor %}
+</table>
