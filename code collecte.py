@@ -61,5 +61,27 @@ def remove_module_dict(state_dict, is_print=False):
     return new_state_dict
 
 
+# 6. 求两个直线的交点
+def line_intersection(line1, line2):
+    """
+        line1: (x1, y1, x2, y2),  line2: (x3, y3, x4, y4)
+        reference:
+            https://stackoverflow.com/questions/20677795/how-do-i-compute-the-intersection-point-of-two-lines
+    """
+    xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+    ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+
+    def _det(a, b):
+        return a[0] * b[1] - a[1] * b[0]
+
+    div = _det(xdiff, ydiff)
+    if div == 0:
+       raise Exception('lines do not intersect')
+
+    d = (_det(*line1), _det(*line2))
+    x = _det(d, xdiff) / div
+    y = _det(d, ydiff) / div
+    return x, y
+
 
 
