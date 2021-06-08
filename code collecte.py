@@ -49,7 +49,16 @@ for i in range(len(contours)):
         cv2.drawContours(img_gray, [contours[i]], -1, (0, 255, 0), thickness=-1)
             continue
             
- # 5. 
+ # 5. 用单卡加载分布式训练的模型， 需要移除对应的 state 中的 module
+#  可以调用这个模型， 更新一下 state _dict 就好了
+def remove_module_dict(state_dict, is_print=False):
+    if is_print: print(state_dict.keys())
+    new_state_dict = {
+        k.replace('module.',''): v for k, v in 
+        state_dict.items()
+    }
+    if is_print: print(new_state_dict.keys())
+    return new_state_dict
 
 
 
