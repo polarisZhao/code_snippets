@@ -84,4 +84,20 @@ def line_intersection(line1, line2):
     return x, y
 
 
+def rotate(angle, center, landmark):
+    rad = angle * np.pi / 180.0
+    alpha = np.cos(rad)
+    beta = np.sin(rad)
+    M = np.zeros((2,3), dtype=np.float32)
+    M[0, 0] = alpha
+    M[0, 1] = beta
+    M[0, 2] = (1-alpha)*center[0] - beta*center[1]
+    M[1, 0] = -beta
+    M[1, 1] = alpha
+    M[1, 2] = beta*center[0] + (1-alpha)*center[1]
+
+    landmark_ = np.asarray([(M[0,0]*x+M[0,1]*y+M[0,2],
+                             M[1,0]*x+M[1,1]*y+M[1,2]) for (x,y) in landmark])
+    return M, landmark_
+
 
