@@ -100,4 +100,18 @@ def rotate(angle, center, landmark):
                              M[1,0]*x+M[1,1]*y+M[1,2]) for (x,y) in landmark])
     return M, landmark_
 
+# 解决加载分布式模型到单机模型的问题:
+# 进行分布式训练的时候，会自动在模型外层添加一层 module, 这个需要在单机训练的时候去掉
+def remove_module_dict(state_dict, is_print=False):
+  new_state_dict = OrderedDict()
+  for k, v in state_dict.items():
+    if k[:7] == 'module.':
+      name = k[7:] # remove `module.`
+    else:
+      name = k
+    new_state_dict[name] = v
+  if is_print: print(new_state_dict.keys())
+  return new_state_dict
+
+
 
