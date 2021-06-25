@@ -84,6 +84,7 @@ def line_intersection(line1, line2):
     return x, y
 
 
+# 7. 带 landmark 进行旋转
 def rotate(angle, center, landmark):
     rad = angle * np.pi / 180.0
     alpha = np.cos(rad)
@@ -100,7 +101,7 @@ def rotate(angle, center, landmark):
                              M[1,0]*x+M[1,1]*y+M[1,2]) for (x,y) in landmark])
     return M, landmark_
 
-# 解决加载分布式模型到单机模型的问题:
+# 8. 解决加载分布式模型到单机模型的问题:
 # 进行分布式训练的时候，会自动在模型外层添加一层 module, 这个需要在单机训练的时候去掉
 def remove_module_dict(state_dict, is_print=False):
   new_state_dict = OrderedDict()
@@ -113,5 +114,28 @@ def remove_module_dict(state_dict, is_print=False):
   if is_print: print(new_state_dict.keys())
   return new_state_dict
 
+# 9. 固定参数进行训练:
+# 在网络声明中使用两句话:
+# for p in self.parameters():
+#     p.requires_grad=False
+#
+# 如下所示:
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(1, 6, 5)
+        self.conv2 = nn.Conv2d(6, 16, 5)
 
+        for p in self.parameters():  # <-  可以实现 self.conv1 和 self.conv2 的参数 (weights和bias) 固定
+            p.requires_grad=False    # <-
+
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.fc2 = nn.Linear(120, 84)
+        self.fc3 = nn.Linear(84, 10)
+
+# ! 还必须在优化器中进行指定更新, 比如 SGD 优化器
+optimizer.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-3)
+
+
+# 10. 根据点生成 heatmap 热力图
 
