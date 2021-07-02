@@ -139,3 +139,12 @@ optimizer.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-3)
 
 # 10. 根据点生成 heatmap 热力图
 
+
+
+# 11. c++ 记录时间的函数
+auto preprocess_start = std::chrono::steady_clock::now();
+# something 
+auto preprocess_end = std::chrono::steady_clock::now();
+double preprocess_cost_time = std::chrono::duration_cast<std::chrono::microseconds>(preprocess_end - preprocess_start).count() / 1000.0;
+                                
+                                
